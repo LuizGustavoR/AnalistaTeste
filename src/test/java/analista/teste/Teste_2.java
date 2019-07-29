@@ -1,17 +1,20 @@
 package analista.teste;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
+import analista.teste.entities.TesteJson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-
-import static org.hamcrest.Matchers.equalTo;
 
 /**
  * Unit test for simple App.
@@ -31,14 +34,22 @@ public class Teste_2 {
 	@Test
 	public void testResponseValues() throws IOException {
 		
+		// Pega arquivo json na pasta resources
 		ClassLoader classLoader = getClass().getClassLoader();
 	    File file = new File(classLoader.getResource("teste2.json").getFile());
 	    String expectedData = FileUtils.readFileToString(file, "UTF-8");
 
+	    // Transforma arquivo em objeto
+		Gson gson = new Gson();
+		TesteJson t2 = gson.fromJson(expectedData, TesteJson.class); // deserializes json into t2
+
 		Response response = RestAssured.get();
-
-		assertEquals(expectedData, response.asString().trim());
-
+		response.then().assertThat()
+		.body("userId", equalTo(t2.getUserId()))
+        .body("id", equalTo(t2.getId()))
+        .body("title", equalTo(t2.getTitle()))
+        .body("completed", equalTo(t2.isCompleted()));
+		
 	}
 
 	/*
