@@ -1,7 +1,6 @@
 package analista.teste;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,23 +32,20 @@ public class Teste_2 {
 	 */
 	@Test
 	public void testResponseValues() throws IOException {
-		
+
 		// Pega arquivo json na pasta resources
 		ClassLoader classLoader = getClass().getClassLoader();
-	    File file = new File(classLoader.getResource("teste2.json").getFile());
-	    String expectedData = FileUtils.readFileToString(file, "UTF-8");
+		File file = new File(classLoader.getResource("teste2.json").getFile());
+		String expectedData = FileUtils.readFileToString(file, "UTF-8");
 
-	    // Transforma arquivo em objeto
+		// Transforma arquivo em objeto
 		Gson gson = new Gson();
 		TesteJson t2 = gson.fromJson(expectedData, TesteJson.class); // deserializes json into t2
 
 		Response response = RestAssured.get();
-		response.then().assertThat()
-		.body("userId", equalTo(t2.getUserId()))
-        .body("id", equalTo(t2.getId()))
-        .body("title", equalTo(t2.getTitle()))
-        .body("completed", equalTo(t2.isCompleted()));
-		
+		response.then().assertThat().body("userId", equalTo(t2.getUserId())).body("id", equalTo(t2.getId()))
+				.body("title", equalTo(t2.getTitle())).body("completed", equalTo(t2.isCompleted()));
+
 	}
 
 	/*
@@ -57,14 +53,11 @@ public class Teste_2 {
 	 */
 	@Test
 	public void testResponseComArquivo() {
-		
+
 		Response response = RestAssured.get();
-		response.then().assertThat()
-		.body("userId", equalTo(1))
-        .body("id", equalTo(1))
-        .body("title", equalTo("delectus aut autem"))
-        .body("completed", equalTo(false));
-		
+		response.then().assertThat().body("userId", equalTo(1)).body("id", equalTo(1))
+				.body("title", equalTo("delectus aut autem")).body("completed", equalTo(false));
+
 	}
 
 }
